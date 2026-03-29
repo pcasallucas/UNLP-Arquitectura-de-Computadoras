@@ -1,35 +1,47 @@
         org 1000h  
-        RES  db ?
         string db "abbcde",0
         char db 'b'
+        reem db 'o'
 
 
         org 2000h
         mov BX, offset string
+        push BX
         mov CL, char
-        call CONTAR_CAR
-
-
-fin:    mov RES, DL
+        push CX
+        mov CL, reem
+        push CX
+        call REEMPLAZAR_CHAR
         hlt
 
         org 3000h
-CONTAR_CAR:
-        mov DL, 0
+REEMPLAZAR_CHAR:
+        push BX
+        push AX
+        mov CX, 0
+        mov DX, 0
+        mov BX, SP
+        add BX, 6
+        mov CL, [BX]
+        mov CH, 0
+        mov DL, [BX + 2]
+        mov BX, [BX + 4]
 loop:
         mov AL, [BX]
         cmp AL, 0
         jz subfin
 
-        cmp CL, AL
-        jz vocal
+        cmp AL, DL
+        jz match
         inc BX
         jmp loop
 
-vocal:        
-        inc DL  
+match:        
+        mov [bx], CL  
         inc BX
         jmp loop
 subfin:
+        pop AX
+        pop BX
         ret
         end
